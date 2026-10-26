@@ -1,7 +1,7 @@
 import time
 from typing import Callable, Any
 
-from src.consumir_gemini import armar_peticion, extraer_texto, enviar_peticion
+from src.consumir_gemini import armar_peticion, enviar_peticion
 
 def con_reintento(
     funcion: Callable[[], Any],
