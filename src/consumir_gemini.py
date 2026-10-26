@@ -1,16 +1,17 @@
 import os 
 import requests
 from dotenv import load_dotenv 
+import time
 
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
-modelo = "gemini-flash-latest"
+modelo = "gemini-3.6-flash"
     
 url_base = f"https://generativelanguage.googleapis.com/v1beta/models/"
 
 #Funcion para crear la solicitud
-def armar_peticion(pregunta):
+def armar_peticion(pregunta, modelo):
     if not pregunta:
         raise ValueError("La pregunta no puede estar vacía")
     url = f"{url_base}{modelo}:generateContent?key={api_key}"
@@ -54,16 +55,34 @@ def extraer_texto(datos):
 
 
 def obtener_dato_prueba(pregunta):
-    url, body= armar_peticion(pregunta)
+    url, body= armar_peticion(pregunta, "gemini-3.6-flash")
+    inicio = time.perf_counter() #Empezamos el contador
     datos = enviar_peticion(url, body)
+    fin = time.perf_counter() # Terminamos el contador
+    latencia = fin - inicio
+    print(f"Latencia : {latencia:.2f} segundos")
+    costo = calcular_costo(datos, 0.00000075,0.00000375)
+    print(f"Costo de la petición : ${costo:.6f} USD")
+    
+    
     
     return extraer_texto(datos)
+
+
+def calcular_costo(datos, precio_entrada,precio_salida):
+    uso = datos['usageMetadata']
+    tokens_entrada = uso['promptTokenCount']
+    token_salida = uso['candidatesTokenCount']
+    token_razonamiento = uso['thoughtsTokenCount']
+    costo = (tokens_entrada * precio_entrada) + ((token_salida + token_razonamiento) * precio_salida)
+    return costo
 
 
 try:
     print(obtener_dato_prueba("Hola cómo estas"))
 except (ValueError, RuntimeError) as error: #Acá manejamos cualquiera de los errores lanzado en la ejecución de las funciones.
     print("No se pudo completar la operación")
+    
 
 
 # def obtener_dato_de_prueba(pregunta):
