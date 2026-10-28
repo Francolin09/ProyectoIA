@@ -90,7 +90,9 @@ def obtener_dato_prueba(pregunta):
     
     
     
-    return extraer_texto(datos)
+    texto = extraer_texto(datos)
+    datos_formateados = parsear_respuesta_json(texto,["categoria", "nivel"])
+    return datos_formateados
 
 
 def calcular_costo(datos, precio_entrada,precio_salida):
