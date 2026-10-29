@@ -17,13 +17,15 @@ try:
                 prompt["system_instruction"],
                 prompt["response_schema"]
             )
-            respuesta = enviar_peticion(url, body)
-            texto = extraer_texto(respuesta)
             try:
+                # La petición va dentro del try: un 503 u otro error de red
+                # cuenta como intento fallido en vez de cortar todo el programa
+                respuesta = enviar_peticion(url, body)
+                texto = extraer_texto(respuesta)
                 datos = parsear_respuesta_json(texto, prompt["claves_esperadas"])
                 exitos += 1 #exitos++
                 print(f"Respuesta: {datos}")
-            except ValueError as error:
+            except (ValueError, RuntimeError, TimeoutError) as error:
                 print(f" intento {intento + 1} falló: {error}")
             time.sleep(1)
         print(f"{prompt['nombre']}: {exitos}/{intentos} respuestas válidas")
