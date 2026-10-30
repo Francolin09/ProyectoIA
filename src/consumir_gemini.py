@@ -53,8 +53,7 @@ def enviar_peticion(url,body):
     except requests.exceptions.Timeout:
         raise RuntimeError("Se agotó el tiempo de espera, intenta más tarde")
 
-    if respuesta.status_code != 200:
-        raise RuntimeError(f"Error en la peticion. status code : {respuesta.status_code}")
+    
     if respuesta.status_code in(401, 403):
         raise ValueError("Credencial inválida o sin permiso. Revisa tu GEMINI_API_KEY")
     if respuesta.status_code >= 500:
@@ -63,6 +62,8 @@ def enviar_peticion(url,body):
         segundos = respuesta.headers.get("Retry-After")
         mensaje = f"Límite excedido. Reintentar en {segundos}s." if segundos else "Límite excedido."
         raise TimeoutError(mensaje)
+    if respuesta.status_code != 200:
+        raise RuntimeError(f"Error en la peticion. status code : {respuesta.status_code}")    
         
     try:
         return respuesta.json()
