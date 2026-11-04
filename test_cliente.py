@@ -1,5 +1,6 @@
 import cliente
 from cliente import con_reintento, consultar_modelo
+from pipeline import *
 from unittest.mock import patch, Mock
 
 import pytest
@@ -60,3 +61,13 @@ def test_registrar_costo_acumula():
 
     assert costo == cliente.COSTO_POR_1000_TOKENS
     assert cliente.costo_total_sesion == cliente.COSTO_POR_1000_TOKENS
+
+def test_procesar_texto_normaliza_mayusculas_y_puntuacion():
+    resultado = procesar_texto("El Cielo, es AZUL!")
+
+    assert resultado == ["el", "cielo", "es", "azul"]
+
+def test_procesar_texto_solo_puntuacion_devuelve_lista_vacia():
+    resultado = procesar_texto("¡¡¡...!!!")
+
+    assert resultado == []
