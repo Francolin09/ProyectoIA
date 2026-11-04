@@ -19,6 +19,10 @@ def tokenizar(texto_limpio:str)->list[str]:
 def vectorizar(tokens: list[str])-> Counter:
     return Counter(tokens)
 
+def procesar_texto(texto):
+    texto_limpio = limpiar_texto(texto)
+    return tokenizar(texto_limpio)    
+
 if __name__== "__main__":
     texto = "El gato, el perro y el gato corren."
     texto_limpio = limpiar_texto(texto)
