@@ -74,7 +74,7 @@ def consultar_modelo(pregunta: str, system_instruction: str = "") -> str:
 
 
 if __name__ == "__main__":
-    resultado = consultar_modelo("¿Cuál es la capital de Chile?")
+    resultado = consultar_modelo("¿Cuál es la capital de Chile?")#acá podemos pasar o no pasar el system instruction
     print(resultado)
     # for i in range(15): ESTE ES PARA PROBAR EL RATE LIMIT
     #     try:
